@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ResetSpeed : StateMachineBehaviour
 {
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.speed = 1f;
     }

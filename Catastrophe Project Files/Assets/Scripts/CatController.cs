@@ -19,7 +19,7 @@ public class CatController : MonoBehaviour
     [SerializeField] int blinkProbability = 30;
 
     [Header("Special Animations")]
-//    [SerializeField] List<AnimationClip> specialAnimations = new List<AnimationClip>();
+    [SerializeField] List<AnimationClip> specialAnimations = new List<AnimationClip>();
     [SerializeField] int clickCount = 0;
     [SerializeField] int maxClicks = 10;
     [SerializeField] int minIntervalClicks = 8;
@@ -55,9 +55,14 @@ public class CatController : MonoBehaviour
         }
     }
 
+    public void CallReachFunction()
+    {
+        StartCoroutine(ReachForVase(true));
+    }
+
     public IEnumerator ReachForVase(bool isAfterSpecialAnimation)
     {
-        var waitTimeReach = GetWaitTimeReach();
+        var waitTimeReach = GetWaitTimeReach(isAfterSpecialAnimation);
         animationSpeed = GetAnimationSpeed(isAfterSpecialAnimation, true);
 
         yield return new WaitForSeconds(waitTimeReach);
@@ -69,30 +74,37 @@ public class CatController : MonoBehaviour
         StartCoroutine(KnockVaseOver(waitTimeReach, isAfterSpecialAnimation));
     }
 
-    private float GetWaitTimeReach()
+    private float GetWaitTimeReach(bool isAfterSpecialAnimation)
     {
-        var waitRandomness = Random.Range(-waitRandomFactor, waitRandomFactor);
-        float waitTimeReach;
-
-        int probability = Random.Range(0, 101);
-        if (probability < 40)
+        if(isAfterSpecialAnimation)
         {
-            waitTimeReach = 0f;
-        }
-        else if (probability < 60)
-        {
-            waitTimeReach = 0.5f;
-        }
-        else if (probability < 80)
-        {
-            waitTimeReach = 1f;
+            return 0;
         }
         else
         {
-            waitTimeReach = 2f;
+            var waitRandomness = Random.Range(-waitRandomFactor, waitRandomFactor);
+            float waitTimeReach;
+
+            int probability = Random.Range(0, 101);
+            if (probability < 40)
+            {
+                waitTimeReach = 0f;
+            }
+            else if (probability < 60)
+            {
+                waitTimeReach = 0.5f;
+            }
+            else if (probability < 80)
+            {
+                waitTimeReach = 1f;
+            }
+            else
+            {
+                waitTimeReach = 2f;
+            }
+            waitTimeReach += waitRandomness;
+            return waitTimeReach;
         }
-        waitTimeReach += waitRandomness;
-        return waitTimeReach;
     }
 
     private IEnumerator KnockVaseOver(float waitTimeReach, bool isAfterSpecialAnimation)
@@ -134,7 +146,10 @@ public class CatController : MonoBehaviour
     {
         yield return new WaitForSeconds(Random.Range(twitchWaitTimeMin, twitchWaitTimeMax));
 
-        PlayTwitchAnimations();
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            PlayTwitchAnimations();
+        }
         StartCoroutine(WaitBeforeTwitchAnimation());
     }
 
@@ -161,16 +176,12 @@ public class CatController : MonoBehaviour
         var probability = Random.Range(0, 101);
         if(probability < specialAnimationProbability)
         {
-            Debug.Log("Playing random animation" + Random.Range(0, 5));
-
-//            GetComponent<Animator>().Play(specialAnimations[Random.Range(1, specialAnimations.Count)].name);
+            GetComponent<Animator>().Play(specialAnimations[Random.Range(0, specialAnimations.Count)].name);
             clickCount -= minIntervalClicks;
-            StartCoroutine(ReachForVase(true));
         }
         else
         {
             StartCoroutine(ReachForVase(false));
         }
     }
-
 }

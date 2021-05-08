@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartSceneLetter : MonoBehaviour
+public class StartSceneLetters : MonoBehaviour
 {
     [SerializeField] int xPosCoefficient = 1;
     [SerializeField] int yPosCoefficient = 1;
