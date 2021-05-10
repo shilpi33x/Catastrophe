@@ -886,8 +886,8 @@ MonoBehaviour:
   - {fileID: 7400000, guid: 0de82b36f1d97104984173d4dc2d5d1b, type: 2}
   clickCount: 0
   maxClicks: 10
-  minIntervalClicks: 7
-  specialAnimationProbability: 30
+  minIntervalClicks: 5
+  specialAnimationProbability: 40
 --- !u!95 &1913594674
 Animator:
   serializedVersion: 3
