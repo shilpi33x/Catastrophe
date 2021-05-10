@@ -611,11 +611,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cat
       objectReference: {fileID: 0}
-    - target: {fileID: 5258478789501350694, guid: 68571968fab221544ae838d460321ec6,
-        type: 3}
-      propertyPath: minIntervalClicks
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 5258478789501350695, guid: 68571968fab221544ae838d460321ec6,
         type: 3}
       propertyPath: m_LocalPosition.x
