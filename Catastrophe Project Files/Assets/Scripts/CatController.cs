@@ -50,20 +50,15 @@ public class CatController : MonoBehaviour
             }
             else
             {
-                StartCoroutine(ReachForVase(false));
+                StartCoroutine(ReachForVase());
             }
         }
     }
 
-    public void CallReachFunction()
+    public IEnumerator ReachForVase()
     {
-        StartCoroutine(ReachForVase(true));
-    }
-
-    public IEnumerator ReachForVase(bool isAfterSpecialAnimation)
-    {
-        var waitTimeReach = GetWaitTimeReach(isAfterSpecialAnimation);
-        animationSpeed = GetAnimationSpeed(isAfterSpecialAnimation, true);
+        var waitTimeReach = GetWaitTimeReach();
+        animationSpeed = GetAnimationSpeed(true);
 
         yield return new WaitForSeconds(waitTimeReach);
 
@@ -71,46 +66,39 @@ public class CatController : MonoBehaviour
         animator.SetBool("isReaching", true);
         animator.SetBool("isKnockingOver", false);
 
-        StartCoroutine(KnockVaseOver(waitTimeReach, isAfterSpecialAnimation));
+        StartCoroutine(KnockVaseOver(waitTimeReach));
     }
 
-    private float GetWaitTimeReach(bool isAfterSpecialAnimation)
+    private float GetWaitTimeReach()
     {
-        if(isAfterSpecialAnimation)
+        var waitRandomness = Random.Range(-waitRandomFactor, waitRandomFactor);
+        float waitTimeReach;
+
+        int probability = Random.Range(0, 101);
+        if (probability < 40)
         {
-            return 0;
+            waitTimeReach = 0f;
+        }
+        else if (probability < 60)
+        {
+            waitTimeReach = 0.5f;
+        }
+        else if (probability < 80)
+        {
+            waitTimeReach = 1f;
         }
         else
         {
-            var waitRandomness = Random.Range(-waitRandomFactor, waitRandomFactor);
-            float waitTimeReach;
-
-            int probability = Random.Range(0, 101);
-            if (probability < 40)
-            {
-                waitTimeReach = 0f;
-            }
-            else if (probability < 60)
-            {
-                waitTimeReach = 0.5f;
-            }
-            else if (probability < 80)
-            {
-                waitTimeReach = 1f;
-            }
-            else
-            {
-                waitTimeReach = 2f;
-            }
-            waitTimeReach += waitRandomness;
-            return waitTimeReach;
+            waitTimeReach = 2f;
         }
+        waitTimeReach += waitRandomness;
+        return waitTimeReach;
     }
 
-    private IEnumerator KnockVaseOver(float waitTimeReach, bool isAfterSpecialAnimation)
+    private IEnumerator KnockVaseOver(float waitTimeReach)
     {
         var waitTimeKnock = Random.Range(0, waitTimeReach);
-        animationSpeed = GetAnimationSpeed(isAfterSpecialAnimation, false);
+        animationSpeed = GetAnimationSpeed(false);
 
         yield return new WaitForSeconds(waitTimeKnock);
 
@@ -119,7 +107,7 @@ public class CatController : MonoBehaviour
         animator.SetBool("isReaching", false);
     }
 
-    private float GetAnimationSpeed(bool isAfterSpecialAnimation, bool reachOrKnock)
+    private float GetAnimationSpeed(bool reachOrKnock)
     {
         float animationSpeedMinTemp;
         if (reachOrKnock)
@@ -130,15 +118,7 @@ public class CatController : MonoBehaviour
         {
             animationSpeedMinTemp = animationSpeed;
         }
-
-        if (isAfterSpecialAnimation)
-        {
-            animationSpeed = animationSpeedMax;
-        }
-        else
-        {
-            animationSpeed = Random.Range(animationSpeedMinTemp, animationSpeedMax);
-        }
+        animationSpeed = Random.Range(animationSpeedMinTemp, animationSpeedMax);
         return animationSpeed;
     }
 
@@ -177,11 +157,11 @@ public class CatController : MonoBehaviour
         if(probability < specialAnimationProbability)
         {
             GetComponent<Animator>().Play(specialAnimations[Random.Range(0, specialAnimations.Count)].name);
-            clickCount -= minIntervalClicks;
+            clickCount = maxClicks - minIntervalClicks;
         }
         else
         {
-            StartCoroutine(ReachForVase(false));
+            StartCoroutine(ReachForVase());
         }
     }
 }
