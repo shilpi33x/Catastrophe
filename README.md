@@ -6,7 +6,7 @@
  
 ### Features:
  * Randomized response time before flipping the switch - or in this case, knocking the vase over
- * Rabdomized variable animation speeds
+ * Randomized variable animation speeds
  * Blink/fidget animations play after short random intervals
  * Chance to have a "special" animation play after every X clicks
 ### Additional Credits:
